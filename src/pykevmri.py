@@ -1,16 +1,21 @@
-import os
-import subprocess
-from utils import check_dcm2niix, check_gz, get_kwargs
+from utils import *
 
-def convert(path: str, **kwargs):
+def convert(path: str, engine: str or int, **kwargs):
     """Convert DICOM files to NIFTI files in BIDS format following dcm2niix conventions, but with Python!
 
     Parameters
     ----------
     path: str
         Absolute path to the DICOM directory. 
+    
+    engine: str or int
+        Backend converter tool. Either 'dcm2bids' or 0 to execute dcm2bids or 'dcm2niix' or 1 to execute dcm2niix.
 
-    Keyword Arguments
+    Keyword Arguments [dcm2bids]
+    -----------------
+
+
+    Keyword Arguments [dcm2niix]
     -----------------
     comp_level: int
         Compression level. 1=fast, 9=slow
@@ -38,35 +43,8 @@ def convert(path: str, **kwargs):
 
     """
 
-    # check that dcm2niix is installed
-    check_dcm2niix()
+    if engine == 'dcm2niix' or engine == 1:
 
-    # check that all files are unzipped
-    dir = os.listdir(path)
-    [check_gz(i) for i in dir]
+        dcm2niix_convert(path, kwargs)
 
-    # generate args
-    a = get_kwargs(kwargs)
-    if not a:
-        bash = f'dcm2niix {path}'
-    else:
-        bash = f'dcm2niix {a} {path}'
-
-    # execute
-    subprocess.run(bash, shell=True, check=True, text=True)
-
-    # update user
-    process = subprocess.Popen(bash, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    status = process.poll()
-    if status is not None:
-        print(f'\noperation complete\n')
-
-
-
-
-
-            
-
-            
-
-
+    elif engine == 'dcm2bids' or engine == 0:
