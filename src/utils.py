@@ -1,9 +1,14 @@
 import sys
 import os
 import subprocess
-import numpy as np
-from itertools import chain
-import json
+
+def check_gz(path):
+    """Checks if all individual files are uncompressed. If compressed, will uncompress in same directory."""
+    # unzip file
+    if path.split('.')[-1] == '.tgz':
+        subprocess.run(f'tar -kxvzf {path} -C {os.path.dirname(path)}', shell=True, check=True, text=True)
+    else:
+        pass
 
 def tgzunzip(path):
     dir = os.listdir(path)
@@ -12,7 +17,6 @@ def tgzunzip(path):
         Checked for .tgz files\n \
         ---------------------')
     return (print(r))
-
 
 def check_engine(engine):
     """Checks if engine is installed"""
@@ -39,17 +43,9 @@ def check_engine(engine):
 
     return(dcm2niix_exist)
 
-def check_gz(path):
-    """Checks if all individual files are uncompressed. If compressed, will uncompress in same directory."""
-    # unzip file
-    if path.split('.')[-1] == '.tgz':
-        subprocess.run(f'tar -kxvzf {path} -C {os.path.dirname(path)}', shell=True, check=True, text=True)
-    else:
-        pass
-
-def get_kwargs(engine, kwargs: dict):
-    """Parse keyword args and return list of dcm2niix flags
+def dcm2niix_get_kwargs(engine, kwargs):
     
+    """
     Input specifity
     ---------------
     comp_level: int
@@ -126,7 +122,19 @@ def get_kwargs(engine, kwargs: dict):
     out = ' '.join(map(str, out))
     return(out)
 
+def dcm2bids_get_kwargs(engine, kwargs):
+    pass
 
-    
+def get_kwargs(engine: str or int, kwargs: dict):
+    """Parse keyword args and return flags for subprocess.run()
 
-        
+    Parameters
+    ----------
+    engine: str or int
+        Backend converter tool. Either 'dcm2bids' or 0 to execute dcm2bids or 'dcm2niix' or 1 to execute dcm2niix.
+    """
+    OUT = []
+    if engine == 'dcm2niix' or engine == 1:
+        OUT = dcm2niix_get_kwargs(engine, kwargs)
+
+    return(OUT)

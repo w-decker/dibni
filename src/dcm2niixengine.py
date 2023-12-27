@@ -5,7 +5,7 @@ def dcm2niix_convert(path, engine, kwargs):
         check_engine(engine)
 
         # check that all files are unzipped
-
+        tgzunzip()
 
         # generate args
         a = get_kwargs(kwargs)

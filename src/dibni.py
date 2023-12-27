@@ -1,8 +1,9 @@
 from utils import *
-from niixe import dcm2niix_convert
+from dcm2niixengine import dcm2niix_convert
+from dcm2bidsengine import dcm2bids_convert
 
-def convert(path: str, engine: str or int, **kwargs):
-    """Convert DICOM files to NIFTI files in BIDS format following dcm2niix conventions, but with Python!
+def dibni(path: str, engine: str or int, **kwargs):
+    """Convert DICOM files to BIDS compliant NIFTI files!
 
     Parameters
     ----------
