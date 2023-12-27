@@ -5,8 +5,6 @@ import numpy as np
 from itertools import chain
 import json
 
-# universal 
-
 def tgzunzip(path):
     dir = os.listdir(path)
     [check_gz(i) for i in dir]
@@ -15,35 +13,11 @@ def tgzunzip(path):
         ---------------------')
     return (print(r))
 
-def make_description_json(proj_name: str, bids_version: str, path=os.path.dirname(os.path.abspath(__name__))):
-    """Makes necessary dataset_description.json as required via BIDS specification
-    
-    Parameters
-    ----------
-    proj_name: str
-        Project name
 
-    bids_version: str
-        BIDS Version
-
-    path: str, default: current path
-        Path to output .json file
-    """
-
-    jdict = {"Name":f'{proj_name}',
-             "BIDSVersion":f'{bids_version}'}
-
-    with open("dataset_description.json", "w") as f:
-        json.dump(jdict, f, ensure_ascii=False, indent=4)
-
-
-# dcm2niix
-
-def check_dcm2niix():
-    """Checks if dcm2niix is installed"""
+def check_engine(engine):
+    """Checks if engine is installed"""
     # check OS
     syst = None
-    dcm2niix_exist = None
     if sys.platform == 'linux' or sys.platform == 'linux2':
         syst = 'l' # linux
     elif sys.platform == 'darwin':
@@ -51,10 +25,15 @@ def check_dcm2niix():
     elif sys.platform == 'win31':
         syst = 'w'
 
-    if syst == 'm' and os.path.exists('/opt/homebrew/bin/dcm2niix'):
+    if engine == 1:
+        engine = 'dcm2niix'
+    elif engine == 0:
+        engine = 'dcm2bids'
+
+    if syst == 'm' and os.path.exists(f'/opt/homebrew/bin/{engine}'):
         dcm2niix_exist = True
     elif syst == 'l':
-        dcm2niix_exist = print(f'You are using Linux. Please ensure dcm2niix is properly installed.')
+        dcm2niix_exist = print(f'You are using Linux. Please ensure {engine} is properly installed.')
     elif syst == 'w':
         dcm2niix_exist = print(f'Windows functionality does not yet exist.')
 
@@ -68,7 +47,7 @@ def check_gz(path):
     else:
         pass
 
-def get_kwargs_dcm2niix(kwargs: dict):
+def get_kwargs(engine, kwargs: dict):
     """Parse keyword args and return list of dcm2niix flags
     
     Input specifity
@@ -147,36 +126,6 @@ def get_kwargs_dcm2niix(kwargs: dict):
     out = ' '.join(map(str, out))
     return(out)
 
-def dcm2niix_convert(path, kwargs):
-        # check that dcm2niix is installed
-        check_dcm2niix()
-
-        # check that all files are unzipped
-
-
-        # generate args
-        a = get_kwargs_dcm2niix(kwargs)
-        if not a:
-            bash = f'dcm2niix {path}'
-        else:
-            bash = f'dcm2niix {a} {path}'
-
-        # execute
-        subprocess.run(bash, shell=True, check=True, text=True)
-
-        # update user
-        process = subprocess.Popen(bash, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        status = process.poll()
-        if status is not None:
-            print(f'\noperation complete\n')
-
-# dcm2bids
-
-def check_dcm2bids():
-    pass
-
-def get_kwargs_dcm2bids():
-    pass
 
     
 

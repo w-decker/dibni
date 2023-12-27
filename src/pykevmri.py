@@ -1,4 +1,5 @@
 from utils import *
+from niixe import dcm2niix_convert
 
 def convert(path: str, engine: str or int, **kwargs):
     """Convert DICOM files to NIFTI files in BIDS format following dcm2niix conventions, but with Python!
@@ -48,3 +49,4 @@ def convert(path: str, engine: str or int, **kwargs):
         dcm2niix_convert(path, kwargs)
 
     elif engine == 'dcm2bids' or engine == 0:
+        pass
