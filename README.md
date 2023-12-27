@@ -1,4 +1,4 @@
-# PyKevMRI
+# DIBNI
 Converting DICOM files to BIDS compliant NIFTI files. This code merges and executes command line tools like [`dcm2niix`](https://www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage), [`dcm2bids`](https://unfmontreal.github.io/Dcm2Bids/3.1.1/) and (forthcoming) [`heudiconv`](https://heudiconv.readthedocs.io/en/latest/usage.html). 
 
 # Documentation
